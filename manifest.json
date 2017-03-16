@@ -8,7 +8,8 @@
   },
   "permissions": [
     "contextMenus",
-    "activeTab"
+    "notifications",
+    "*://fanyi.youdao.com/*"
   ],
   "background": {
     "scripts": [
