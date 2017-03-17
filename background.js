@@ -54,14 +54,16 @@ function showExplain(result) {
                     content += String.format('{0}\n', result.basic.explains[index]);
                 }
             }
+        } else if(result.translation && result.translation.length>0){
+            content += result.translation[0];
         }
 
     }
     if (content.length == 0) {
         content = '没有找到释义';
     }
-
-    browser.notifications.create({
+    browser.notifications.clear('ydwd-notification')
+    browser.notifications.create('ydwd-notification',{
         "type": "basic",
         "title": query,
         "message": content
