@@ -1,41 +1,41 @@
-function onCreated(n) {
-    if (browser.runtime.lastError) {
-        console.log(`Error: ${browser.runtime.lastError}`);
-    } else {
-        console.log("Item created successfully");
-    }
-}
-
 const API = 'http://fanyi.youdao.com/openapi.do?keyfrom=f2ec-org&key=1787962561&type=data&doctype=json&version=1.1&q=';
 
-function query(word) {
-    var http = new XMLHttpRequest();
+browser.contextMenus.create({
+    id: 'translate-selection',
+    title: '翻译"%s"',
+    contexts: ["selection"]
+});
+
+browser.contextMenus.onClicked.addListener(function (info, tab) {
+    let word = info.selectionText;
+    let http = new XMLHttpRequest();
     http.onreadystatechange = function () {
         if (http.readyState == 4 && http.status == 200) {
-            showExplain(http.responseText);
+            let content = parseResponse(http.responseText);
+            showExplains(word,content);
         }
     }
     http.open('GET', API + word, true);
     http.send();
-}
+});
+
 String.format = function () {
     if (arguments.length == 0)
         return null;
 
-    var str = arguments[0];
-    for (var i = 1; i < arguments.length; i++) {
-        var re = new RegExp('\\{' + (i - 1) + '\\}', 'gm');
+    let str = arguments[0];
+    for (let i = 1; i < arguments.length; i++) {
+        let re = new RegExp('\\{' + (i - 1) + '\\}', 'gm');
         str = str.replace(re, arguments[i]);
     }
     return str;
 }
-function showExplain(result) {
 
+function parseResponse(result) {
     result = JSON.parse(result);
-    console.log(result);
-    var content = '';
+    let content = '';
     if (result.errorCode == 0) {
-        var query = result.query;
+        let query = result.query;
         if (result.basic) {
             if (result.basic['us-phonetic']) {
                 content += String.format('美[{0}]', result.basic['us-phonetic']);
@@ -50,11 +50,11 @@ function showExplain(result) {
                 content += '\n';
             }
             if (result.basic.explains) {
-                for (var index in result.basic.explains) {
+                for (let index in result.basic.explains) {
                     content += String.format('{0}\n', result.basic.explains[index]);
                 }
             }
-        } else if(result.translation && result.translation.length>0){
+        } else if (result.translation && result.translation.length > 0) {
             content += result.translation[0];
         }
 
@@ -62,21 +62,15 @@ function showExplain(result) {
     if (content.length == 0) {
         content = '没有找到释义';
     }
-    browser.notifications.clear('ydwd-notification')
-    browser.notifications.create('ydwd-notification',{
-        "type": "basic",
-        "title": query,
-        "message": content
-    });
+    return content;
+
 }
 
-browser.contextMenus.create({
-    id: 'translate-selection',
-    title: '翻译"%s"',
-    contexts: ["selection"]
-}, onCreated);
-
-browser.contextMenus.onClicked.addListener(function (info, tab) {
-    var word = info.selectionText;
-    query(word);
-});
+function showExplains(word, explains) {
+    browser.notifications.clear('ydwd-notification')
+    browser.notifications.create('ydwd-notification', {
+        "type": "basic",
+        "title": word,
+        "message": explains
+    });
+}
