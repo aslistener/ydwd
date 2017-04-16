@@ -8,15 +8,21 @@ browser.contextMenus.create({
 
 browser.contextMenus.onClicked.addListener(function (info, tab) {
     let word = info.selectionText;
-    let http = new XMLHttpRequest();
-    http.onreadystatechange = function () {
-        if (http.readyState == 4 && http.status == 200) {
-            let content = parseResponse(http.responseText);
-            showExplains(word,content);
-        }
+    translate(word);
+});
+
+browser.commands.onCommand.addListener(function (command) {
+    if (command == "ydwd-translate") {
+        browser.tabs.query({ active: true, currentWindow: true })
+            .then((tabs) => {
+                browser.tabs.sendMessage(tabs[0].id, { action: 'fetch' })
+                    .then(response => {
+                        if (response.word) {
+                            translate(response.word);
+                        }
+                    });
+            });
     }
-    http.open('GET', API + word, true);
-    http.send();
 });
 
 String.format = function () {
@@ -29,6 +35,18 @@ String.format = function () {
         str = str.replace(re, arguments[i]);
     }
     return str;
+}
+
+function translate(word) {
+    let http = new XMLHttpRequest();
+    http.onreadystatechange = function () {
+        if (http.readyState == 4 && http.status == 200) {
+            let content = parseResponse(http.responseText);
+            showExplains(word, content);
+        }
+    }
+    http.open('GET', API + word, true);
+    http.send();
 }
 
 function parseResponse(result) {
@@ -50,11 +68,22 @@ function parseResponse(result) {
                 content += '\n';
             }
             if (result.basic.explains) {
+                content += '\n';
                 for (let index in result.basic.explains) {
                     content += String.format('{0}\n', result.basic.explains[index]);
                 }
             }
-        } else if (result.translation && result.translation.length > 0) {
+        }
+        if (result.web) {
+            if (content.length > 0) {
+                content += '\n';
+            }
+            for (let i in result.web) {
+                obj = result.web[i];
+                content += String.format('<b>{0}</b>: {1}\n', obj.key, obj.value.join(';'))
+            }
+        }
+        if (result.translation && result.translation.length > 0) {
             content += result.translation[0];
         }
 
@@ -67,10 +96,8 @@ function parseResponse(result) {
 }
 
 function showExplains(word, explains) {
-    browser.notifications.clear('ydwd-notification')
-    browser.notifications.create('ydwd-notification', {
-        "type": "basic",
-        "title": word,
-        "message": explains
-    });
+    let tabs = browser.tabs.query({ active: true, currentWindow: true });
+    tabs.then((tabs) => {
+        browser.tabs.sendMessage(tabs[0].id, { action: 'show', word: word, explains: explains });
+    })
 }

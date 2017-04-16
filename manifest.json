@@ -8,12 +8,30 @@
   },
   "permissions": [
     "contextMenus",
-    "notifications",
     "*://fanyi.youdao.com/*"
   ],
   "background": {
     "scripts": [
       "background.js"
     ]
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "popup.js",
+        "content.js"
+      ]
+    }
+  ],
+  "commands": {
+    "ydwd-translate": {
+      "suggested_key": {
+        "default": "Alt+W"
+      },
+      "description": "Translate the selected word"
+    }
   }
 }
