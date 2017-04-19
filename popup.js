@@ -78,8 +78,8 @@ var popup = {
         this.render();
         ref = this;
         let timeout = explains.length / 12.0 * 1000;
-        if (timeout < 5000) {
-            timeout = 5000;
+        if (timeout < 30000) {
+            timeout = 30000;
         }
         this.timeoutId = setTimeout(function () {
             ref.close();

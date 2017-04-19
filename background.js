@@ -83,7 +83,7 @@ function parseResponse(result) {
                 content += String.format('<strong style="font-size: inherit !important; font-family:inherit !important; font-weight: bold !important;">{0}</strong>: {1}\n', obj.key, obj.value.join(';'))
             }
         }
-        if (content && content.length == 0 && result.translation && result.translation.length > 0) {
+        if (content.length == 0 && result.translation && result.translation.length > 0) {
             content += result.translation[0];
         }
 
