@@ -10,10 +10,8 @@ var popup = {
             this.close();
         }
         let wrapper = document.createElement('div');
-        wrapper.style.cssText = "background:rgba(255, 255, 255, 0.95);\
-                                width: 350px;\
-                                font-family: arial,'Hiragino Sans GB','Microsoft Yahei','微软雅黑','宋体',Tahoma,Arial,Helvetica,STHeiti;\
-                                font-size: 14px;\
+        wrapper.style.cssText = "background:rgba(255, 255, 255, 0.9);\
+                                width: 250px;\
                                 position: fixed;\
                                 right: 5px;\
                                 bottom: 5px;\
@@ -32,10 +30,11 @@ var popup = {
         closeButton.style.cssText = "all: initial;\
                                     height:20px;\
                                     float: right;\
-                                    font-size: 12px;\
-                                    font-family: arial,'Hiragino Sans GB','Microsoft Yahei','微软雅黑','宋体',Tahoma,Arial,Helvetica,STHeiti;\
+                                    font-size: 14px;\
+                                    font-family: arial,'Hiragino Sans GB','Microsoft Yahei','微软雅黑','宋体',Tahoma,Arial,Helvetica,STHeiti !important;\
                                     border: 1px solid white\
-                                    z-index: 999;";
+                                    z-index: 999;\
+                                    padding-right: 5px;";
         closeButton.addEventListener("click", () => {
             this.close();
         });
@@ -45,24 +44,27 @@ var popup = {
         word.textContent = this.word;
         word.style.cssText = "all: initial;\
                               display: block;\
-                              font-size: 16px;\
+                              font-size: 14px !important;\
+                              color: #1a1a1a !important;\
                               padding-left: 15px;\
                               padding-right: 15px;\
                               padding-top:10px;\
                               padding-bottom: 5px;\
-                              font-family: arial,'Hiragino Sans GB','Microsoft Yahei','微软雅黑','宋体',Tahoma,Arial,Helvetica,STHeiti;\
+                              font-family: 'Microsoft Yahei','微软雅黑',arial,'Hiragino Sans GB','宋体',Tahoma,Arial,Helvetica,STHeiti !important;\
                               font-weight: bold;";
         box.appendChild(word);
 
-        let body = document.createElement("p");
-        body.innerHTML = this.explains;
-        body.style.cssText = "all: initial;\
-                              display: block;\
-                              font-size: 14px;\
-                              padding-left: 15px;\
-                              padding-right: 15px;\
-                              font-family: arial,'Hiragino Sans GB','Microsoft Yahei','微软雅黑','宋体',Tahoma,Arial,Helvetica,STHeiti";
-        box.appendChild(body);
+        let explains = document.createElement("p");
+        explains.innerHTML = this.explains;
+        explains.style.cssText = "all: initial !important;\
+                              display: block !important;\
+                              font-size: 12px !important;\
+                              color: #1a1a1a !important;\
+                              padding-left: 15px !important;\
+                              padding-right: 15px !important;\
+                              font-family: 'Microsoft Yahei','微软雅黑',arial,'Hiragino Sans GB','宋体',Tahoma,Arial,Helvetica,STHeiti !important";
+        box.appendChild(explains);
+
         wrapper.appendChild(box);
         this.dom = wrapper;
         document.body.appendChild(this.dom);

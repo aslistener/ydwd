@@ -1,4 +1,4 @@
-const API = 'http://fanyi.youdao.com/openapi.do?keyfrom=f2ec-org&key=1787962561&type=data&doctype=json&version=1.1&q=';
+const API = 'http://fanyi.youdao.com/openapi.do?keyfrom=f2ec-org&key=1787962561&type=data&doctype=json&version=1.1&q={0}';
 
 browser.contextMenus.create({
     id: 'translate-selection',
@@ -45,7 +45,7 @@ function translate(word) {
             showExplains(word, content);
         }
     }
-    http.open('GET', API + word, true);
+    http.open('GET', String.format(API, word), true);
     http.send();
 }
 
@@ -80,10 +80,10 @@ function parseResponse(result) {
             }
             for (let i in result.web) {
                 obj = result.web[i];
-                content += String.format('<b>{0}</b>: {1}\n', obj.key, obj.value.join(';'))
+                content += String.format('<strong style="font-size: inherit !important; font-family:inherit !important; font-weight: bold !important;">{0}</strong>: {1}\n', obj.key, obj.value.join(';'))
             }
         }
-        if (result.translation && result.translation.length > 0) {
+        if (content && content.length == 0 && result.translation && result.translation.length > 0) {
             content += result.translation[0];
         }
 
