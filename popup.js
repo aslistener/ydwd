@@ -10,7 +10,7 @@ var popup = {
             this.close();
         }
         let wrapper = document.createElement('div');
-        wrapper.style.cssText = "background:rgba(255, 255, 255, 0.9);\
+        wrapper.style.cssText = "background:rgba(255, 255, 255, 1.0);\
                                 width: 250px;\
                                 position: fixed;\
                                 right: 5px;\
