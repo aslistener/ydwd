@@ -1,4 +1,4 @@
-const API = 'http://fanyi.youdao.com/openapi.do?keyfrom=f2ec-org&key=1787962561&type=data&doctype=json&version=1.1&q={0}';
+const API = 'http://fanyi.youdao.com/openapi.do?keyfrom=Firefox-addon-ydwd&key=1451433447&type=data&doctype=json&version=1.1&q={0}';
 
 browser.contextMenus.create({
     id: 'translate-selection',
@@ -51,45 +51,39 @@ function translate(word) {
 
 function parseResponse(result) {
     result = JSON.parse(result);
-    let content = '';
+    let content = {
+        phonetics: [],
+        explains: [],
+        web: []
+    };
     if (result.errorCode == 0) {
         let query = result.query;
         if (result.basic) {
             if (result.basic['us-phonetic']) {
-                content += String.format('美[{0}]', result.basic['us-phonetic']);
-            }
-            if (content.length > 0) {
-                content += '  ';
+                content.phonetics.push(String.format('美[{0}]', result.basic['us-phonetic']));
             }
             if (result.basic['uk-phonetic']) {
-                content += String.format('英[{0}]', result.basic['uk-phonetic']);
-            }
-            if (content.length > 0) {
-                content += '\n';
+                content.phonetics.push(String.format('英[{0}]', result.basic['uk-phonetic']));
             }
             if (result.basic.explains) {
-                content += '\n';
                 for (let index in result.basic.explains) {
-                    content += String.format('{0}\n', result.basic.explains[index]);
+                    content.explains.push(result.basic.explains[index]);
                 }
             }
         }
         if (result.web) {
-            if (content.length > 0) {
-                content += '\n';
-            }
             for (let i in result.web) {
                 obj = result.web[i];
-                content += String.format('<strong style="font-size: inherit !important; font-family:inherit !important; font-weight: bold !important;">{0}</strong>: {1}\n', obj.key, obj.value.join(';'))
+                content.web.push({ key: obj.key, value: obj.value.join(';') });
             }
         }
-        if (content.length == 0 && result.translation && result.translation.length > 0) {
-            content += result.translation[0];
+        if (content.explains.length == 0 && result.translation && result.translation.length > 0) {
+            content.explains.push(result.translation[0]);
         }
 
     }
-    if (content.length == 0) {
-        content = '没有找到释义';
+    if (content.explains.length == 0) {
+        content.explains.push('没有找到释义');
     }
     return content;
 
