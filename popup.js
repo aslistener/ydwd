@@ -121,6 +121,7 @@ var popup = {
     close: function () {
         this.dom.parentNode.removeChild(this.dom);
         this.dom = undefined;
+        this.word = undefined;
     },
     createNode: function (name, cssText, textContent) {
         let node = document.createElement(name);
@@ -131,5 +132,8 @@ var popup = {
             node.textContent = textContent;
         }
         return node;
+    },
+    getCurrentWord: function(){
+        return this.word;
     }
 }
