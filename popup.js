@@ -6,10 +6,6 @@ var popup = {
     timeoutId: undefined,
 
     render: function () {
-        if (this.dom) {
-            this.close();
-        }
-
         let wrapper = document.createElement('div');
         wrapper.style.cssText = "background:rgba(255, 255, 255, 1.0);\
                                 position: fixed;\
@@ -18,7 +14,7 @@ var popup = {
                                 bottom: 5px;\
                                 box-sizing: border-box;\
                                 border: 1px solid lightgray;\
-                                z-index: 999;\
+                                z-index: 2147483647;\
                                 overflow: hidden;"
 
         let closeButton = document.createElement('button');
@@ -107,6 +103,9 @@ var popup = {
         document.body.appendChild(this.dom);
     },
     show: function (word, content) {
+        if (this.dom) {
+            this.close();
+        }
         if (this.timeoutId) {
             clearTimeout(this.timeoutId);
         }
