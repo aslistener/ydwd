@@ -17,7 +17,7 @@ browser.commands.onCommand.addListener(function (command) {
             .then((tabs) => {
                 browser.tabs.sendMessage(tabs[0].id, { action: 'fetch' })
                     .then(response => {
-                        if (response.word) {
+                        if (response && response.word) {
                             translate(response.word);
                         }
                     });
