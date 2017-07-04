@@ -1,0 +1,93 @@
+#ydwd-wrapper{
+    all: initial !important;
+    background:rgba(255, 255, 255, 1.0) !important;
+    position: fixed !important;
+    width: 250px !important;
+    right: 5px !important;
+    bottom: 5px !important;
+    border: 1px solid lightgray !important;
+    z-index: 2147483647 !important;
+    overflow: hidden !important;
+}
+
+.ydwd-close{
+    all: initial !important;
+    position: absolute !important;
+    top: 2px !important;
+    right: 2px !important;
+    transform: rotate(45deg) !important;
+    display: inline-block !important;
+    height:16px !important;
+    width: 16px !important;
+    line-height: 16px !important;
+    border-radius: 50% !important;
+    background-color: white !important;
+    font-size: 14px !important;
+    font-weight: 100 !important;
+    text-align: center !important;
+    font-family: arial,'Hiragino Sans GB','Microsoft Yahei','微软雅黑','宋体',Tahoma,Arial,Helvetica,STHeiti !important;
+}
+.ydwd-close:hover{
+    color: white !important;
+    background-color: lightgray !important;
+    font-weight: bold !important;
+}
+.ydwd-close::-moz-focus-inner{
+    border: none !important;
+}
+#ydwd-content{
+    max-height: 500px !important;
+    box-sizing: border-box !important;
+    padding: 10px !important;
+    overflow: auto !important;
+}
+#ydwd-word{
+    all: initial !important;
+    display: block !important;
+    font-size: 14px !important;
+    color: #1a1a1a !important;
+    font-family: 'Microsoft Yahei','微软雅黑',arial,'Hiragino Sans GB','宋体',Tahoma,Arial,Helvetica,STHeiti !important;
+    font-weight: bold !important;
+}
+#ydwd-phonetics{
+    all: initial !important;
+    display: block !important;
+    margin-top: 0px !important;
+    line-height: 0.8 !important;
+    margin-bottom: 10px !important;
+}
+
+.ydwd-phonetics-inline{
+    margin-right: 5px !important;
+    font-size: 11px !important;
+    font-family: 'Microsoft Yahei','微软雅黑',arial,'Hiragino Sans GB','宋体',Tahoma,Arial,Helvetica,STHeiti !important;
+}
+
+#ydwd-explains{
+    all: initial !important;
+    display: block !important;
+    margin-top: 4px !important;
+}
+.ydwd-explain{
+    all: initial !important;
+    display: block !important;
+    font-size: 12px !important;
+    color: #1a1a1a !important;
+    font-family: 'Microsoft Yahei','微软雅黑',arial,'Hiragino Sans GB','宋体',Tahoma,Arial,Helvetica,STHeiti !important
+}
+#ydwd-extends{
+    all: initial !important;
+    display: block !important;
+    margin-top: 4px !important;
+}
+.ydwd-extend{
+    all: initial !important;
+    display: block !important;
+    font-size: 12px !important;
+    color: #1a1a1a !important;
+    font-family: 'Microsoft Yahei','微软雅黑',arial,'Hiragino Sans GB','宋体',Tahoma,Arial,Helvetica,STHeiti !important;
+}
+
+.ydwd-extend-key{
+    font-weight: bold !important;
+}

@@ -6,99 +6,51 @@ var popup = {
     timeoutId: undefined,
 
     render: function () {
-        let wrapper = document.createElement('div');
-        wrapper.style.cssText = "background:rgba(255, 255, 255, 1.0);\
-                                position: fixed;\
-                                width: 250px;\
-                                right: 5px;\
-                                bottom: 5px;\
-                                box-sizing: border-box;\
-                                border: 1px solid lightgray;\
-                                z-index: 2147483647;\
-                                overflow: hidden;"
+        let wrapper = this.createElement('div',"id","ydwd-wrapper");
 
-        let closeButton = document.createElement('button');
+        let closeButton = this.createElement('button',"class","ydwd-close");
         closeButton.textContent = '+';
-        closeButton.style.cssText = "all: initial;\
-                                    position: absolute;\
-                                    transform: rotate(45deg);\
-                                    height:16px;\
-                                    width: 16px;\
-                                    line-height: 16px !important;\
-                                    right: 2px;\
-                                    top: 2px;\
-                                    border-radius: 50%;\
-                                    background-color: white;\
-                                    font-size: 14px;\
-                                    font-weight: 100 !important;\
-                                    text-align: center !important;\
-                                    font-family: arial,'Hiragino Sans GB','Microsoft Yahei','微软雅黑','宋体',Tahoma,Arial,Helvetica,STHeiti !important;";
         closeButton.addEventListener("click", () => {
             this.close();
         });
-        closeButton.addEventListener('mouseover', () => {
-            closeButton.style.backgroundColor = 'lightgray';
-            closeButton.style.color = 'white';
-        })
-        closeButton.addEventListener('mouseout', () => {
-            closeButton.style.backgroundColor = 'white';
-            closeButton.style.color = 'black';
-        })
         wrapper.appendChild(closeButton);
 
-        let box = document.createElement('div');
-        box.style.cssText = "max-height: 500px;\
-                             box-sizing: border-box;\
-                             padding: 10px;\
-                             overflow: auto;";
+        let content = this.createElement('div',"id","ydwd-content");
 
-        let word = document.createElement('h1');
+        let word = this.createElement('h1',"id","ydwd-word");
         word.textContent = this.word;
-        word.style.cssText = "all: initial;\
-                              display: block;\
-                              font-size: 14px !important;\
-                              color: #1a1a1a !important;\
-                              font-family: 'Microsoft Yahei','微软雅黑',arial,'Hiragino Sans GB','宋体',Tahoma,Arial,Helvetica,STHeiti !important;\
-                              font-weight: bold;";
-        box.appendChild(word);
+        content.appendChild(word);
 
-        let blockCss = "all: initial !important;\
-                    display: block !important;\
-                    margin-top: 10px !important;";
-        let lineCss = "all: initial !important;\
-                    display: block !important;\
-                    font-size: 12px !important;\
-                    color: #1a1a1a !important;\
-                    font-family: 'Microsoft Yahei','微软雅黑',arial,'Hiragino Sans GB','宋体',Tahoma,Arial,Helvetica,STHeiti !important";
-        let inlineCss = "margin-right: 5px !important;\
-                    font-size: 12px !important;";
-
-        let phonetics = this.createNode("div", blockCss, undefined);
+        let phonetics = this.createElement("div", "id", "ydwd-phonetics");
         for (let i in this.content.phonetics) {
-            let node = this.createNode("span", inlineCss, this.content.phonetics[i]);
+            let node = this.createElement("span", "class", "ydwd-phonetics-inline");
+            node.textContent=this.content.phonetics[i];
             phonetics.appendChild(node);
         }
-        box.appendChild(phonetics);
+        content.appendChild(phonetics);
 
-        let explains = this.createNode("div", blockCss, undefined);
+        let explains = this.createElement("div", "id", "ydwd-explains");
         for (let i in this.content.explains) {
-            let node = this.createNode("p", lineCss, this.content.explains[i])
+            let node = this.createElement("p", "class", "ydwd-explain")
+            node.textContent=this.content.explains[i];
             explains.appendChild(node);
         }
-        box.appendChild(explains);
+        content.appendChild(explains);
 
-        let web = this.createNode("div", blockCss, undefined);
+        let web = this.createElement("div", "id", "ydwd-extends");
         for (let i in this.content.web) {
-            let node = this.createNode("p", lineCss, undefined);
-            let key = this.createNode("span", "font-weight: bold !important;", this.content.web[i].key + ":");
-            let value = this.createNode("span", undefined, this.content.web[i].value);
+            let node = this.createElement("p", "class", "ydwd-extend");
+            let key = this.createElement("span", "class", "ydwd-extend-key");
+            key.textContent=this.content.web[i].key + ":";
+            let value = document.createElement("span");
+            value.textContent = this.content.web[i].value;
             node.appendChild(key);
             node.appendChild(value);
             web.appendChild(node);
         }
-        box.appendChild(web);
+        content.appendChild(web);
 
-        wrapper.appendChild(box);
+        wrapper.appendChild(content);
         this.dom = wrapper;
         document.body.appendChild(this.dom);
     },
@@ -122,13 +74,10 @@ var popup = {
         this.dom = undefined;
         this.word = undefined;
     },
-    createNode: function (name, cssText, textContent) {
+    createElement: function (name, attr, value) {
         let node = document.createElement(name);
-        if (cssText) {
-            node.style.cssText = cssText;
-        }
-        if (textContent) {
-            node.textContent = textContent;
+        if (attr) {
+            node.setAttribute(attr,value);
         }
         return node;
     },
