@@ -1,4 +1,15 @@
-const API = 'http://fanyi.youdao.com/openapi.do?keyfrom=Firefox-addon-ydwd&key=1451433447&type=data&doctype=json&version=1.1&q={0}';
+
+String.format = function () {
+    if (arguments.length == 0)
+        return null;
+
+    let str = arguments[0];
+    for (let i = 1; i < arguments.length; i++) {
+        let re = new RegExp('\\{' + (i - 1) + '\\}', 'gm');
+        str = str.replace(re, arguments[i]);
+    }
+    return str;
+}
 
 browser.contextMenus.create({
     id: 'translate-selection',
@@ -25,68 +36,143 @@ browser.commands.onCommand.addListener(function (command) {
     }
 });
 
-String.format = function () {
-    if (arguments.length == 0)
-        return null;
+function postAjax(url, data, success) {
+    var params = typeof data == 'string' ? data : Object.keys(data).map(
+        function (k) { return encodeURIComponent(k) + '=' + encodeURIComponent(data[k]) }
+    ).join('&');
 
-    let str = arguments[0];
-    for (let i = 1; i < arguments.length; i++) {
-        let re = new RegExp('\\{' + (i - 1) + '\\}', 'gm');
-        str = str.replace(re, arguments[i]);
-    }
-    return str;
+    var xhr = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
+    xhr.open('POST', url + "?" + params, true);
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState > 3 && xhr.status == 200) { success(xhr.responseText); }
+    };
+    xhr.setRequestHeader('Content-Encoding', 'gzip');
+    xhr.send();
+    return xhr;
 }
 
 function translate(word) {
-    let http = new XMLHttpRequest();
-    http.onreadystatechange = function () {
-        if (http.readyState == 4 && http.status == 200) {
-            let content = parseResponse(http.responseText);
-            showExplains(word, content);
-        }
+    let request = {
+        "jsonversion": "2",
+        "client": "mobile",
+        "q": undefined,
+        "dicts": "{\"count\":99,\"dicts\":[[\"ec\",\"ce\",\"hh\"],[\"web_trans\"],[\"fanyi\"]]}",
+        "keyfrom": "mdict.7.4.2.android",
+        "model": "OD105",
+        "mid": "7.1.1",
+        "imei": "99000869048590",
+        "vendor": "union53",
+        "screen": "1080x1920",
+        "ssid": "Lawrence-lyra",
+        "network": "wifi",
+        "abtest": "8",
+        "xmlVersion": "5.1"
     }
-    http.open('GET', String.format(API, word), true);
-    http.send();
+    request.q = word;
+    postAjax('http://dict.youdao.com/jsonapi', request, result => {
+        let json = JSON.parse(result);
+        showExplains(word, parseResponse(json));
+    })
 }
 
 function parseResponse(result) {
-    result = JSON.parse(result);
     let content = {
         phonetics: [],
         explains: [],
         web: []
     };
-    if (result.errorCode == 0) {
-        let query = result.query;
-        if (result.basic) {
-            if (result.basic['us-phonetic']) {
-                content.phonetics.push(String.format('美[{0}]', result.basic['us-phonetic']));
+    let word = undefined;
+    if (result.ec) {
+        word = result.ec.word[0];
+        if (word.usphone) {
+            phonetic = {};
+            phonetic.value = String.format('美[{0}]', word.usphone);
+            if (word.usspeech) {
+                phonetic.speech = word.usspeech;
             }
-            if (result.basic['uk-phonetic']) {
-                content.phonetics.push(String.format('英[{0}]', result.basic['uk-phonetic']));
+            content.phonetics.push(phonetic);
+        }
+        if (word.ukphone) {
+            phonetic = {};
+            phonetic.value = String.format('英[{0}]', word.ukphone);
+            if (word.ukspeech) {
+                phonetic.speech = word.ukspeech;
             }
-            if (result.basic.explains) {
-                for (let index in result.basic.explains) {
-                    content.explains.push(result.basic.explains[index]);
+            content.phonetics.push(phonetic);
+        }
+        if (content.phonetics.length == 0 && word.phone) {
+            phonetic = {};
+            phonetic.value = String.format('[{0}]', word.phone);
+            if (word.speech) {
+                phonetic.speech = word.speech;
+            }
+            content.phonetics.push(phonetic);
+        }
+        if (word.trs) {
+            word.trs.forEach((item) => {
+                let explain = item.tr[0].l.i[0];
+                if (item.tr[0].l.i[1]) {
+                    explain += item.tr[0].l.i[1]['#text'];
                 }
-            }
+                content.explains.push(explain);
+            })
         }
-        if (result.web) {
-            for (let i in result.web) {
-                obj = result.web[i];
-                content.web.push({ key: obj.key, value: obj.value.join(';') });
-            }
-        }
-        if (content.explains.length == 0 && result.translation && result.translation.length > 0) {
-            content.explains.push(result.translation[0]);
-        }
-
     }
-    if (content.explains.length == 0) {
-        content.explains.push('没有找到释义');
+
+    if (result.ce) {
+        word = result.ce.word[0];
+        if (word.phone) {
+            phonetic = {};
+            phonetic.value = word.phone;
+            content.phonetics.push(phonetic);
+        }
+        if (word.trs) {
+            let explains = [];
+            word.trs.forEach((item) => {
+                let explain = item.tr[0].l.i[0];
+                if (item.tr[0].l.i[1]) {
+                    explain += item.tr[0].l.i[1]['#text'];
+                }
+                explains.push(explain);
+            })
+            content.explains.push(explains.join("; "));
+        }
+    }
+
+    if (result.hh) {
+        word = result.hh.word[0];
+        if (content.phonetics.length == 0 && word.phone) {
+            phonetic = {};
+            phonetic.value = word.phone;
+            content.phonetics.push(phonetic);
+        }
+        if (word.trs) {
+            word.trs.tr.forEach((item, i) => {
+                content.explains.push((i + 1) + ". " + item.l.i);
+            })
+        }
+    }
+
+    if (result.web_trans) {
+        result.web_trans['web-translation'].forEach(item => {
+            if (content.web.length < 5) {
+                let key = item.key;
+                if (key != result.input) {
+                    let values = [];
+                    item.trans.forEach(v => {
+                        values.push(v.value)
+                    })
+                    content.web.push({ key: key, value: values[0] });
+                }
+
+            }
+        })
+    }
+
+    if (result.fanyi && result.fanyi.tran) {
+        content.explains.push(result.fanyi.tran);
     }
     return content;
-
 }
 
 function showExplains(word, explains) {

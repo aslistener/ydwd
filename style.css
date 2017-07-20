@@ -1,15 +1,14 @@
 #ydwd-wrapper{
     all: initial !important;
-    background:rgba(255, 255, 255, 1.0) !important;
+    background:white !important;
     position: fixed !important;
     width: 250px !important;
     right: 5px !important;
     bottom: 5px !important;
-    border: 1px solid lightgray !important;
+    border: 1px solid #A2A9B1 !important;
     z-index: 2147483647 !important;
     overflow: hidden !important;
 }
-
 .ydwd-close{
     all: initial !important;
     position: absolute !important;
@@ -25,6 +24,7 @@
     font-size: 14px !important;
     font-weight: 100 !important;
     text-align: center !important;
+    cursor: pointer !important;
     font-family: arial,'Hiragino Sans GB','Microsoft Yahei','微软雅黑','宋体',Tahoma,Arial,Helvetica,STHeiti !important;
 }
 .ydwd-close:hover{
@@ -45,7 +45,7 @@
     all: initial !important;
     display: block !important;
     font-size: 14px !important;
-    color: #1a1a1a !important;
+    color: rgb(36, 39, 41) !important;
     font-family: 'Microsoft Yahei','微软雅黑',arial,'Hiragino Sans GB','宋体',Tahoma,Arial,Helvetica,STHeiti !important;
     font-weight: bold !important;
 }
@@ -58,9 +58,21 @@
 }
 
 .ydwd-phonetics-inline{
+    text-decoration: none !important;
+    outline: none !important;
     margin-right: 5px !important;
+    color: rgb(36, 39, 41) !important;
     font-size: 11px !important;
     font-family: 'Microsoft Yahei','微软雅黑',arial,'Hiragino Sans GB','宋体',Tahoma,Arial,Helvetica,STHeiti !important;
+}
+
+.ydwd-speech{
+    cursor: pointer !important;
+    color: #07c !important;
+}
+
+.ydwd-phonetics-inline::-moz-focus-inner{
+    border: none !important;
 }
 
 #ydwd-explains{
@@ -72,7 +84,7 @@
     all: initial !important;
     display: block !important;
     font-size: 12px !important;
-    color: #1a1a1a !important;
+    color: rgb(36, 39, 41) !important;
     font-family: 'Microsoft Yahei','微软雅黑',arial,'Hiragino Sans GB','宋体',Tahoma,Arial,Helvetica,STHeiti !important
 }
 #ydwd-extends{
@@ -84,7 +96,7 @@
     all: initial !important;
     display: block !important;
     font-size: 12px !important;
-    color: #1a1a1a !important;
+    color: rgb(36, 39, 41) !important;
     font-family: 'Microsoft Yahei','微软雅黑',arial,'Hiragino Sans GB','宋体',Tahoma,Arial,Helvetica,STHeiti !important;
 }
 

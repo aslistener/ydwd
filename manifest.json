@@ -1,14 +1,14 @@
 {
   "manifest_version": 2,
   "name": "ydwd",
-  "version": "2.10",
-  "description": "调用有道词典的开放接口完成网页内查词和翻译(支持中英互译)。开放源代码：https://github.com/amit-gshe/ydwd. 使用方法：选择一个单词或句子，然后右键选择'翻译...'或按快捷键(Alt+W)，会将翻译结果以卡片的形式显示在网页右下角（再按一次Alt+W将关闭弹窗）。",
+  "version": "3.0",
+  "description": "调用有道词典的接口完成网页内查词和翻译(支持中英互译)。开放源代码：https://github.com/amit-gshe/ydwd. 使用方法：选择一个单词或句子，然后右键选择'翻译...'或按快捷键(Alt+W)，会将翻译结果以卡片的形式显示在网页右下角（再按一次Alt+W将关闭弹窗）。",
   "icons": {
     "48": "icons/icon-48.png"
   },
   "permissions": [
     "contextMenus",
-    "*://fanyi.youdao.com/*"
+    "*://dict.youdao.com/*"
   ],
   "background": {
     "scripts": [
