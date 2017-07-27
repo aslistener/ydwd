@@ -18,6 +18,12 @@ var popup = {
 
     render: function () {
         let wrapper = this.createElement('div', "id", "ydwd-wrapper");
+        wrapper.addEventListener("mouseover", () => {
+            this.clearAutoClose();
+        })
+        wrapper.addEventListener("mouseout", () => {
+            this.autoClose();
+        })
 
         let closeButton = this.createElement('button', "class", "ydwd-close");
         closeButton.textContent = '+';
@@ -81,6 +87,14 @@ var popup = {
         this.word = word;
         this.content = content;
         this.render();
+        this.autoClose();
+    },
+    close: function () {
+        this.dom.parentNode.removeChild(this.dom);
+        this.dom = undefined;
+        this.word = undefined;
+    },
+    autoClose: function () {
         ref = this;
         this.timeoutId = setTimeout(function () {
             if (ref.dom) {
@@ -88,10 +102,11 @@ var popup = {
             }
         }, 25000);
     },
-    close: function () {
-        this.dom.parentNode.removeChild(this.dom);
-        this.dom = undefined;
-        this.word = undefined;
+    clearAutoClose: function () {
+        if (this.timeoutId) {
+            clearTimeout(this.timeoutId);
+            this.timeoutId = undefined;
+        }
     },
     createElement: function (name, attr, value) {
         let node = document.createElement(name);
